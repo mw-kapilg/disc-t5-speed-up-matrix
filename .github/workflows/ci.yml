@@ -6,6 +6,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Cancel in-progress runs for the same PR/branch when a newer commit is pushed.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test:
     name: ${{ matrix.release }} on ${{ matrix.os }}
@@ -23,6 +28,8 @@ jobs:
         uses: matlab-actions/setup-matlab@v2
         with:
           release: ${{ matrix.release }}
+          # Installing MATLAB dominates job time; restore it from the Actions cache.
+          cache: true
 
       - name: Run tests
         uses: matlab-actions/run-tests@v2
