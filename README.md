@@ -11,3 +11,5 @@ Run the tests locally from the repository root:
 addpath("src")
 results = runtests("tests")
 ```
+
+CI caches the MATLAB installation between runs.
